@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Round {
+  id              Int      @id @default(autoincrement())
+  roundNumber     Int      @unique
+  startTime       DateTime
+  endTime         DateTime?
+  championWallet  String?  @db.VarChar(44)
+  championBought  Decimal  @default(0) @db.Decimal(18, 9)
+  totalPotSol     Decimal  @default(0) @db.Decimal(18, 9)
+  championPayout  Decimal  @default(0) @db.Decimal(18, 9)
+  buybackAmount   Decimal  @default(0) @db.Decimal(18, 9)
+  holderRewards   Decimal  @default(0) @db.Decimal(18, 9)
+  nextRoundBoost  Decimal  @default(0) @db.Decimal(18, 9)
+  participants    Int      @default(0)
+  txChampion      String?  @db.VarChar(88)
+  txBuyback       String?  @db.VarChar(88)
+  status          String   @default("active") @db.VarChar(20)
+  trades          Trade[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([championWallet])
+}
+
+model Trade {
+  id          Int      @id @default(autoincrement())
+  roundId     Int
+  round       Round    @relation(fields: [roundId], references: [id])
+  wallet      String   @db.VarChar(44)
+  solAmount   Decimal  @db.Decimal(18, 9)
+  tokenAmount BigInt
+  txSignature String   @db.VarChar(88)
+  timestamp   DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([wallet])
+  @@index([roundId])
+}
+
+model HolderClaim {
+  id          Int      @id @default(autoincrement())
+  wallet      String   @db.VarChar(44)
+  amount      Decimal  @db.Decimal(18, 9)
+  txSignature String   @db.VarChar(88)
+  claimedAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([wallet])
+}
+

@@ -1,0 +1,2 @@
+Add your brawl-logo.png and favicon.ico here.
+
