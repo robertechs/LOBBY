@@ -63,7 +63,7 @@ agentRouter.get('/status', async (_req: Request, res: Response) => {
       // Alpha Claw (current leader)
       alphaClaw: status.alphaClaw ? {
         wallet: status.alphaClaw.wallet,
-        position: status.alphaClaw.totalBought,
+        position: (status.alphaClaw as any).tokenBalance || (status.alphaClaw as any).totalBought || 0,
         isLeading: true,
       } : null,
       

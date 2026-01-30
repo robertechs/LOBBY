@@ -112,8 +112,8 @@ testRouter.post('/reset-all', async (_req: Request, res: Response) => {
     await resetCycleData();
     await setCycleNumber(1);
     
-    // Clear all cycles from database
-    await prisma.executionCycle.deleteMany({});
+    // Clear all rounds from database
+    await prisma.round.deleteMany({});
     
     console.log('✅ All data reset. Starting fresh from Round 1.');
     
