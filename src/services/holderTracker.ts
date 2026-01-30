@@ -132,8 +132,13 @@ class HolderTracker {
       });
       
       return holders;
-    } catch (error) {
-      console.error('Error fetching token holders:', error);
+    } catch (error: any) {
+      // Check if token doesn't exist yet (waiting for launch)
+      if (error?.message?.includes('not a Token mint') || error?.code === -32602) {
+        console.log('⏳ Waiting for token to go live... (checking every 3s)');
+      } else {
+        console.error('Error fetching token holders:', error);
+      }
       return [];
     }
   }
